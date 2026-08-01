@@ -2,7 +2,7 @@
 
 ## Candidate
 
-**Name:** Asmit Singh
+**Name:** Abhinav Singh
 
 **Role:** Junior Cloud & DevOps Engineer Assessment
 
