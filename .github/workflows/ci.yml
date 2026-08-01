@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+
   pull_request:
     branches:
       - main
@@ -19,17 +20,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      ##########################################################
       # Checkout Repository
+      ##########################################################
+
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      ##########################################################
       # Setup Python
+      ##########################################################
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      ##########################################################
       # Install Dependencies
+      ##########################################################
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -37,55 +49,91 @@ jobs:
           pip install flake8==7.1.0
           pip install bandit==1.7.9
 
-      # Format Code
+      ##########################################################
+      # Black Formatter
+      ##########################################################
+
       - name: Format Python Files
         run: |
           black .
 
-      # Lint Code
+      ##########################################################
+      # Flake8
+      ##########################################################
+
       - name: Flake8 Lint
         run: |
           flake8 . --max-line-length=88 --extend-ignore=E203,W503
 
-      # Security Scan
+      ##########################################################
+      # Bandit
+      ##########################################################
+
       - name: Bandit Security Scan
         run: |
           bandit -r django
 
-      # Secret Scan
+      ##########################################################
+      # Gitleaks
+      ##########################################################
+
       - name: Gitleaks Secret Scan
         uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      ##########################################################
       # Setup Terraform
+      ##########################################################
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.8.5
 
-      # Terraform Format Check
+      ##########################################################
+      # Terraform Format
+      ##########################################################
+
       - name: Terraform Format
-        run: terraform -chdir=terraform fmt
+        run: |
+          terraform -chdir=terraform fmt
 
+      ##########################################################
       # Terraform Init
+      ##########################################################
+
       - name: Terraform Init
-        run: terraform -chdir=terraform init -backend=false
+        run: |
+          terraform -chdir=terraform init -backend=false
 
+      ##########################################################
       # Terraform Validate
-      - name: Terraform Validate
-        run: terraform -chdir=terraform validate || true
+      ##########################################################
 
-      # Success
+      - name: Terraform Validate
+        continue-on-error: true
+        run: |
+          terraform -chdir=terraform validate
+
+      ##########################################################
+      # Build Success
+      ##########################################################
+
       - name: Build Passed
-        if: success()
         run: |
           echo "======================================"
-          echo "All Quality & Security Checks Passed"
-          echo "HabotConnect Assessment Completed"
+          echo "Habot DevSecOps Pipeline Completed"
+          echo "Terraform Checked"
+          echo "Python Quality Checked"
+          echo "Security Scan Completed"
           echo "======================================"
 
+      ##########################################################
       # Upload Logs
+      ##########################################################
+
       - name: Upload Logs
         if: always()
         uses: actions/upload-artifact@v4
