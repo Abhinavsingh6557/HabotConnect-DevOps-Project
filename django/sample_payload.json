@@ -1,0 +1,21 @@
+{
+    "student_id": "550e8400-e29b-41d4-a716-446655440000",
+
+    "first_name": "John",
+
+    "last_name": "Doe",
+
+    "email": "john.doe@gmail.com",
+
+    "phone": "9876543210",
+
+    "age": 12,
+
+    "guardian_name": "David Doe",
+
+    "guardian_consent": true,
+
+    "support_required": true,
+
+    "weekly_hours": 8
+}
