@@ -34,18 +34,14 @@ class StudentSerializer(serializers.ModelSerializer):
     def validate_age(self, value):
 
         if value < 5 or value > 18:
-            raise serializers.ValidationError(
-                "Age must be between 5 and 18."
-            )
+            raise serializers.ValidationError("Age must be between 5 and 18.")
 
         return value
 
     def validate_weekly_hours(self, value):
 
         if value < 1 or value > 40:
-            raise serializers.ValidationError(
-                "Weekly hours must be between 1 and 40."
-            )
+            raise serializers.ValidationError("Weekly hours must be between 1 and 40.")
 
         return value
 
@@ -53,9 +49,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
         if not re.fullmatch(r"[6-9]\d{9}", value):
 
-            raise serializers.ValidationError(
-                "Invalid phone number."
-            )
+            raise serializers.ValidationError("Invalid phone number.")
 
         return value
 
@@ -64,10 +58,7 @@ class StudentSerializer(serializers.ModelSerializer):
         if data["support_required"] and not data["guardian_consent"]:
 
             raise serializers.ValidationError(
-                {
-                    "guardian_consent":
-                    "Guardian consent required."
-                }
+                {"guardian_consent": "Guardian consent required."}
             )
 
         return data
