@@ -39,7 +39,8 @@ jobs:
 
       # Format Code
       - name: Format Python Files
-        run: black .
+        run: |
+          black .
 
       # Lint Code
       - name: Flake8 Lint
